@@ -1,8 +1,9 @@
 package com.example.app_bar
 
-import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -14,42 +15,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.app_bar.ui.theme.App_barTheme
 
 class MainActivity : ComponentActivity() {
@@ -80,8 +73,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //CardSample()
                     CamposTexto()
-                    ElevatedButtonSample()
-                    ElevatedButtonSample2()
+                    //ElevatedButtonSample()
+                    //ElevatedButtonSample2()
                     //FloatingActionButtonSample()
                 }
                 Column (
@@ -255,27 +248,8 @@ fun EnterAlwaysTopAppBar() {
     )
 }
 
-//Card
-@Composable
-fun CardSample() {
-    Card(Modifier.size(width = 180.dp, height = 100.dp)) {
-        Box(Modifier.fillMaxSize()) {
-            Text("Bom dia!!", Modifier.align(Alignment.Center))
-        }
 
-    }
-}
 
-    //Button
-    @Composable
-    fun ElevatedButtonSample() {
-        ElevatedButton(onClick = { /* Do something! */ }) { Text("Add Course to Database") }
-    }
-
-    @Composable
-    fun ElevatedButtonSample2() {
-        ElevatedButton(onClick = { /* Do something! */ }) { Text("Read Courses to Database") }
-    }
 
     //Button 2
    /* @Composable
@@ -313,68 +287,86 @@ fun GreetingPreview() {
 @Preview
 fun CamposTexto() {
 
-    val nome = remember { mutableStateOf("") }
-    val duracao = remember { mutableStateOf("") }
-    val tracks = remember { mutableStateOf("") }
-    val descricao = remember { mutableStateOf("") }
-    val cidade = remember { mutableStateOf("") }
-    val estado = remember { mutableStateOf("") }
-
-    Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "SQlite Database in android",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
+    var courseName by remember { mutableStateOf("") }
+    var courseDuration by remember { mutableStateOf("") }
+    var courseTracks by remember { mutableStateOf("") }
+    var courseDescription by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    var dbHandler: DBHandler = DBHandler(context)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         OutlinedTextField(
-            value = nome.value,
-            onValueChange = { nome.value = it },
+            value = courseName,
+            onValueChange = { courseName = it },
             label = { Text("Enter your course name") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
-            value = duracao.value,
-            onValueChange = { duracao.value = it },
+            value = courseDuration,
+            onValueChange = { courseDuration = it },
             label = { Text("Enter your course duration") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
-            value = tracks.value,
-            onValueChange = { tracks.value = it },
+            value = courseTracks,
+            onValueChange = { courseTracks = it },
             label = { Text("Enter your course tracks") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
-            value = descricao.value,
-            onValueChange = { descricao.value = it },
+            value = courseDescription,
+            onValueChange = { courseDescription = it },
             label = { Text("Enter your course description") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .padding(bottom = 16.dp)
         )
-        /*TextField(
-            value = cidade.value,
-            onValueChange = { cidade.value = it },
-            label = { Text("Cidade") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        TextField(
-            value = estado.value,
-            onValueChange = { estado.value = it },
-            label = { Text("Estado") },
-            modifier = Modifier.fillMaxWidth()
-        )*/
 
+        var dbHandler: DBHandler = DBHandler(context)
 
+        Button(
+            onClick = {
+                dbHandler.addNewCourse(
+                    courseName,
+                    courseDuration,
+                    courseDescription,
+                    courseTracks
+                )
+                Toast.makeText(context, "Course Added to Database", Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier
+                .padding(end = 8.dp)
+        ) {
+            Text(text = "Add Course to Database")
         }
+       //botão para read
+        Button(onClick = {
+            val i = Intent(context, ViewCourses::class.java)
+            context.startActivity(i)
+        }) {
+            // on below line adding a text for our button.
+            Text(text = "Read Courses to Database", color = Color.White)
+        }
+        }
+
     }
+
+
+
 
 
 

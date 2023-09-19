@@ -1,9 +1,11 @@
+package com.example.app_bar
+
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.app_bar.model.CursoModel
+import com.example.app_bar.model.CourseModel
 
 class DBHandler // creating a constructor for our database handler.
     (context: Context?) :
@@ -25,10 +27,10 @@ class DBHandler // creating a constructor for our database handler.
 
     // this method is use to add new course to our sqlite database.
     fun addNewCourse(
-        courseName: String?,
-        courseDuration: String?,
-        courseDescription: String?,
-        courseTracks: String?
+        courseName: String,
+        courseDuration: String,
+        courseDescription: String,
+        courseTracks: String
     ) {
         // on below line we are creating a variable for
         // our sqlite database and calling writable method
@@ -72,20 +74,20 @@ class DBHandler // creating a constructor for our database handler.
         private const val ID_COL = "id"
 
         // below variable is for our course name column
-        private const val NAME_COL = "nome"
+        private const val NAME_COL = "name"
 
         // below variable id for our course duration column.
-        private const val DURATION_COL = "duracao"
+        private const val DURATION_COL = "duration"
 
         // below variable for our course description column.
-        private const val DESCRIPTION_COL = "descricao"
+        private const val DESCRIPTION_COL = "description"
 
         // below variable is for our course tracks column.
         private const val TRACKS_COL = "tracks"
     }
 
     // we have created a new method for reading all the courses.
-    fun readCourses(): ArrayList<CursoModel>? {
+    fun readCourses(): ArrayList<CourseModel>? {
         // on below line we are creating a database for reading our database.
         val db = this.readableDatabase
 
@@ -93,14 +95,14 @@ class DBHandler // creating a constructor for our database handler.
         val cursorCourses: Cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
 
         // on below line we are creating a new array list.
-        val cursoModelArrayList: ArrayList<CursoModel> = ArrayList()
+        val courseModelArrayList: ArrayList<CourseModel> = ArrayList()
 
         // moving our cursor to first position.
         if (cursorCourses.moveToFirst()) {
             do {
                 // on below line we are adding the data from cursor to our array list.
-                cursoModelArrayList.add(
-                    CursoModel(
+                courseModelArrayList.add(
+                    CourseModel(
                         cursorCourses.getString(1),
                         cursorCourses.getString(4),
                         cursorCourses.getString(2),
@@ -112,6 +114,6 @@ class DBHandler // creating a constructor for our database handler.
         }
         // at last closing our cursor and returning our array list.
         cursorCourses.close()
-        return cursoModelArrayList
+        return courseModelArrayList
     }
 }
